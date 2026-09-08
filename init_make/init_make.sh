@@ -118,4 +118,4 @@ EOF
     fi
 }
 
-make_c
+make_c "$@"
