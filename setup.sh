@@ -37,5 +37,6 @@ fi
 echo "Using $PATH_BIN as directory of destination"
 
 cp "$BINARY/$BINARY.sh" "$PATH_BIN/"
+chmod 711 "$PATH_BIN/$BINARY.sh"
 
 
