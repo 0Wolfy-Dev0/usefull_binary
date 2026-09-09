@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USAGE="Usage: ./startup.sh [path/to/bin/dir] binary_name"
+USAGE="Usage: ./setup.sh (-d path/to/bin/dir) (-b binary_name...) -b binary_name"
 
 PATH_BIN="/usr/local/bin"
 BINARY=""
@@ -11,32 +11,46 @@ then
     exit 1
 fi
 
+while [ "$#" -gt 0 ];
+do
+    case "$1" in
+        -d)
+            shift
+            [ "$#" -eq 0 ] && echo "Bad argument, $USAGE" && exit 1
 
-if [ "$#" -eq 2 ];
-then
-    if [ ! -d "$1" ];
-    then
-        echo "Destination: $1 does not exist, please try again!"
-        exit 1
-    fi
-    PATH_BIN="$1"
-elif [ "$#" -gt 2 ];
-then
-    echo "Too many arguments\n$USAGE"
-    exit 1
-fi
+            [ ! -d "$1" ] && echo "Destination: $1 does not exist, please try again!" && exit 1
 
-if [ -d "$2" ];
-then
-    BINARY="$2"
-else
-    echo "Binary name not found, please try again!"
-    exit 1
-fi
+            PATH_BIN="$1"
+            shift
+
+            ;;
+        -b)
+            shift
+            [ "$#" -eq 0 ] && echo "Bad argument, $USAGE" && exit 1
+
+            [ ! -d "$1" ] && echo "Binary name not found, please try again!" && exit 1
+
+            BINARY="$BINARY $1"
+            shift
+            ;;
+        *)
+            echo "Bad argument, $USAGE"
+            exit 1
+            ;;
+    esac
+done
+
+[ -z "$BINARY" ] && echo -e "Not enough argument\n$USAGE" && exit 1
 
 echo "Using $PATH_BIN as directory of destination"
 
-cp "$BINARY/$BINARY.sh" "$PATH_BIN/"
-chmod 711 "$PATH_BIN/$BINARY.sh"
+for bin in $BINARY;
+do
+    echo "$bin"
+    cp "$bin/$bin.sh" "$PATH_BIN/"
+    chmod 711 "$PATH_BIN/$bin.sh"
+done
+
+exit 0
 
 
