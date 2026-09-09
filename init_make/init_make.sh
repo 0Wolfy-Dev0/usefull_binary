@@ -24,7 +24,7 @@ EOF
     
     if [[ -n "$lib" ]]; then
         cat >> Makefile <<EOF
-LIBRARY := \$(BUILD_DIR)/$lib
+LIBRARY := $lib
 EOF
     fi
     cat >> Makefile <<'EOF'
@@ -112,7 +112,7 @@ EOF
 lib: $(LIBRARY)
 
 $(LIBRARY): $(LIB_OBJS)
->$(AR) rcs $@ $^
+>$(AR) rcs $(BUILD_DIR)/$@.a $^
 
 EOF
     fi
